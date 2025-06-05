@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "221489575417",
+    "project_id": "trusty-700fa",
+    "storage_bucket": "trusty-700fa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221489575417:android:47fc736e446eb67721f928",
+        "android_client_info": {
+          "package_name": "com.example.trusty"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhGZvJy9Se4DYInnjTKJ1_VCKtWBZlMa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
