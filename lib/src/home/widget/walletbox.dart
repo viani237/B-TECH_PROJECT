@@ -1,6 +1,6 @@
+import 'package:candy_app/decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:trusty/src/constants/decoration.dart';
 
 class WalletBox extends StatelessWidget {
   const WalletBox({
@@ -8,7 +8,6 @@ class WalletBox extends StatelessWidget {
     required this.width,
     required this.height,
     this.amount,
-
     required this.title,
     required this.icon,
     required this.iconColor,
@@ -31,7 +30,6 @@ class WalletBox extends StatelessWidget {
       onTap: ontap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-
         child: Container(
           height: height,
           width: width,
@@ -54,15 +52,14 @@ class WalletBox extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Container(
-                      child: Text(title ?? "", style: textblackmedium),
+                      child: Text(title ?? "", style: textBlackMedium),
                     ),
                   ),
                 ],
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 16),
-                child: Text(amount ?? "", style: textblackmediumBold),
+                child: Text(amount ?? "", style: textBlackMediumBold),
               ),
             ],
           ),
@@ -90,7 +87,6 @@ class WalletBox1 extends StatelessWidget {
     required this.width,
     required this.height,
     this.titleBold,
-
     required this.title,
     required this.topIcon,
     this.ontap,
@@ -110,7 +106,6 @@ class WalletBox1 extends StatelessWidget {
       onTap: ontap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-
         child: Container(
           height: height,
           width: width,
@@ -127,15 +122,14 @@ class WalletBox1 extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15, left: 15),
                     child: Container(
-                      child: Text(title ?? "", style: textblackmedium),
+                      child: Text(title ?? "", style: textBlackMedium),
                     ),
                   ),
                 ],
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 16),
-                child: Text(titleBold ?? "", style: textblackmediumBold),
+                child: Text(titleBold ?? "", style: textBlackMediumBold),
               ),
             ],
           ),
@@ -163,7 +157,6 @@ class WalletBox2 extends StatelessWidget {
     required this.width,
     required this.height,
     this.titleBold,
-
     required this.title,
     required this.topIcon,
     required this.mimititle,
@@ -184,7 +177,6 @@ class WalletBox2 extends StatelessWidget {
       onTap: ontap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-
         child: Container(
           height: height,
           width: width,
@@ -201,15 +193,14 @@ class WalletBox2 extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15, left: 15),
                     child: Container(
-                      child: Text(title ?? "", style: textblackmedium),
+                      child: Text(title ?? "", style: textBlackMedium),
                     ),
                   ),
                 ],
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 8),
-                child: Text(titleBold ?? "", style: textblackmediumBold),
+                child: Text(titleBold ?? "", style: textBlackMediumBold),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 16),
@@ -242,81 +233,110 @@ class WalletBox2 extends StatelessWidget {
   }
 }
 
-// class MoneyBox extends StatelessWidget {
-//   const MoneyBox({
-//     super.key,
-//     required this.width,
-//     required this.height,
-//     this.amount,
-//     required this.image,
-//     required this.title,
-//     required this.icon,
-//     required this.iconColor,
-//   });
+class MoneyBox extends StatelessWidget {
+  const MoneyBox({
+    super.key,
+    required this.width,
+    required this.height,
+    this.amount,
+    required this.title,
+    required this.icon,
+    required this.iconColor,
+  });
 
-//   final double width;
-//   final double height;
-//   final String? title, amount, image;
-//   final IconData icon;
-//   final Color iconColor;
+  final double width;
+  final double height;
+  final String? title, amount;
+  final IconData icon;
+  final Color iconColor;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     // Determine the minimum height based on whether the amount is empty
-//     double minHeight = height * 0.12; // Default minimum height
-//     if (amount == null || amount!.isEmpty) {
-//       minHeight =
-//           height *
-//           0.10; // Smaller height when amount is empty.  Adjust this value as needed.
-//     }
+  @override
+  Widget build(BuildContext context) {
+    // Determine the minimum height based on whether the amount is empty
 
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-//       child: ConstrainedBox(
-//         constraints: BoxConstraints(
-//           maxWidth: width * 0.43,
-//           minHeight: minHeight, // Use the dynamic minHeight here
-//         ),
-//         child: Container(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Padding(
-//                 padding: const EdgeInsets.only(top: 20),
-//                 child: Image.asset(
-//                   image ?? "",
-//                   height: height * 0.05,
-//                   width: width * 0.2,
-//                 ),
-//               ),
-//               Row(
-//                 children: [
-//                   Container(
-//                     height: height * 0.04,
-//                     child: Icon(icon, size: 40, color: iconColor),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.only(top: 15, left: 8, bottom: 8),
-//                     child: Container(
-//                       child: Text(title ?? "", style: textblackmedium),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-
-//               if (amount != null && amount!.isNotEmpty)
-//                 Padding(
-//                   padding: const EdgeInsets.only(left: 8, bottom: 16),
-//                   child: Text(amount ?? "", style: textblackmedium),
-//                 ),
-//             ],
-//           ),
-//           decoration: BoxDecoration(
-//             color: lightWhite,
-//             borderRadius: BorderRadius.circular(10),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+      child: Container(
+        height: height * 0.16,
+        width: width * 0.43,
+        decoration: BoxDecoration(
+          color: white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: height * 0.01,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                height: height * 0.05,
+                width: width * 0.15,
+                child: Icon(icon, size: 30, color: iconColor),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 8,
+                  left: 8,
+                ),
+                child: Container(
+                  child: Text(title ?? "", style: textBlackMedium),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 8,
+                  left: 8,
+                ),
+                child: Container(
+                  child: Text(amount ?? "", style: textBlackMediumBold),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      // child: ConstrainedBox(
+      //   constraints: BoxConstraints(
+      //     maxWidth: width * 0.43,
+      //     minHeight: minHeight, // Use the dynamic minHeight here
+      //   ),
+      //   child: Container(
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.center,
+      //       children: [
+      //         Row(
+      //           children: [
+      //             Container(
+      //               height: height * 0.04,
+      //               child: Icon(icon, size: 40, color: iconColor),
+      //             ),
+      //             Padding(
+      //               padding: const EdgeInsets.only(top: 15, left: 8, bottom: 8),
+      //               child: Container(
+      //                 child: Text(title ?? "", style: textBlackMedium),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //         if (amount != null && amount!.isNotEmpty)
+      //           Padding(
+      //             padding: const EdgeInsets.only(left: 8, bottom: 16),
+      //             child: Text(amount ?? "", style: textBlackMedium),
+      //           ),
+      //       ],
+      //     ),
+      //     decoration: BoxDecoration(
+      //       color: lightBlack,
+      //       borderRadius: BorderRadius.circular(10),
+      //     ),
+      //   ),
+      // ),
+    );
+  }
+}

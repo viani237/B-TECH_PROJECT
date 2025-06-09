@@ -1,9 +1,11 @@
 import 'dart:async';
+
+
+import 'package:candy_app/src/auth/controller/authcontroller.dart';
+import 'package:candy_app/src/auth/screen/signuppage.dart';
+import 'package:candy_app/src/auth/widget/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:trusty/src/auth/screen/sign_up.dart';
-import 'package:trusty/src/controllers/authcontroller.dart';
-import 'package:trusty/src/home/widget/snackbar.dart';
 
 class MailController extends GetxController {
   final authController = Get.find<AuthController>();
@@ -18,14 +20,7 @@ class MailController extends GetxController {
     super.onInit();
   }
 
-  // @override
-  // void onClose() {
-  //   _timer.cancel(); // Cancel the auto-redirect timer
-  //   if (authController._timer != null) { // Check if the timer in AuthController exists
-  //     authController._timer!.cancel(); // Cancel the AuthController's timer if it's active
-  //   }
-  //   super.onClose();
-  // }
+
 
   Future<void> mailVerification() async {
     try {
@@ -42,8 +37,7 @@ class MailController extends GetxController {
       if (user != null && user.emailVerified) {
         timer.cancel();
         authController.initialScreen(user);
-        authController.addUserInfo();
-        authController.clearSignupFields();
+       
       }
     });
   }
@@ -72,6 +66,6 @@ class MailController extends GetxController {
 
   void navigateToSignupForEmailChange() {
     authController.clearSignupFields(); // Clear fields to allow new input
-    Get.offAll(() => Signup()); // Navigate back to the signup route
+    Get.offAll(() => SignUpPage()); // Navigate back to the signup route
   }
 }

@@ -1,16 +1,15 @@
 import 'dart:async';
-
+import 'package:candy_app/decoration.dart';
+import 'package:candy_app/src/auth/screen/loginpage.dart';
+import 'package:candy_app/src/auth/screen/splash.dart';
+import 'package:candy_app/src/auth/screen/verifyemail.dart';
+import 'package:candy_app/src/auth/widget/modalsheet.dart';
+import 'package:candy_app/src/auth/widget/snackbar.dart';
+import 'package:candy_app/src/home/screen/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trusty/src/auth/screen/login.dart';
-import 'package:trusty/src/auth/screen/splash.dart';
-import 'package:trusty/src/auth/screen/verifyemail.dart';
-import 'package:trusty/src/constants/decoration.dart';
-import 'package:trusty/src/home/screen/homepage.dart';
-import 'package:trusty/src/home/widget/imagepick.dart';
-import 'package:trusty/src/home/widget/snackbar.dart';
 
 class AuthController extends GetxController {
   late TextEditingController phoneNumberController,
@@ -71,7 +70,7 @@ class AuthController extends GetxController {
     user == null
         ? Get.offAll(() => Splash())
         : user.emailVerified
-            ? Get.offAll(() => Homepage())
+            ? Get.offAll(() => HomePage())
             : Get.offAll(VerifyEmailPage(email: emailController.text));
   }
 
@@ -106,7 +105,7 @@ class AuthController extends GetxController {
           child: CircularProgressIndicator(
         color: primaryColor,
       )));
-
+      await initialScreen(auth.currentUser);
       try {
         await createAccount();
       } catch (e) {
@@ -116,22 +115,61 @@ class AuthController extends GetxController {
       }
     }
   }
-
-  Future<void> createAccount() async {
+    Future<void> createAccount() async {
     try {
-      await auth.createUserWithEmailAndPassword(
-          email: emailController.text.trim(), password: passwordController.text.trim());
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+
+      // --- CRITICAL CHANGE 1: Call addUserInfo IMMEDIATELY after user creation ---
+      // This ensures user data is saved regardless of email verification status or future app state
+      if (userCredential.user != null) {
+        await addUserInfo(); 
+        clearSignupFields();
+      }
+      // -------------------------------------------------------------------------
+
+      // Then, navigate based on email verification status (new user email is not verified)
       await initialScreen(auth.currentUser);
+
+    } on FirebaseAuthException catch (e) { // Added specific catch for FirebaseAuthException
+        Get.back(); // Dismiss loading dialog on error
+        String errorMessage = "Account creation failed.";
+        if (e.code == 'weak-password') {
+          errorMessage = 'The password provided is too weak.';
+        } else if (e.code == 'email-already-in-use') {
+          errorMessage = 'The account already exists for that email.';
+        }
+        CustomSnackBar("Error", "$errorMessage ${e.message}", "error");
+        print("Firebase Auth Error: ${e.code} - ${e.message}");
     } catch (e) {
-      CustomSnackBar("Error", "Account creation failed$e", "error");
+      Get.back(); // Dismiss loading dialog on error
+      CustomSnackBar("Error", "Account creation failed: $e", "error"); 
+      print("Error during account creation: $e");
     }
   }
+
+  // Future<void> createAccount() async {
+  //   try {
+  //     await auth.createUserWithEmailAndPassword(
+  //         email: emailController.text, password: passwordController.text);
+  //         if (userCredential.user != null) {
+  //       await addUserInfo(); 
+  //     }
+  //     await initialScreen(auth.currentUser);
+  //   } catch (e) {
+  //     CustomSnackBar("Error", "Account creation failed$e", "error");
+  //   }
+  // }
 
   Future<void> ResetPasswordEmail() async {
     try {
       await auth.sendPasswordResetEmail(
           email: resetEmailController.text.trim());
-      CustomSnackBar("Success", "Email sent use it to reset password", 'error');
+      CustomSnackBar(
+          "Success",
+          "Email sent use it to ${resetEmailController.text} reset password",
+          'success');
+      resetEmailController.clear();
       Get.to(() => LoginPage());
     } on FirebaseAuthException catch (e) {
       CustomSnackBar("Error", "$e", 'error');
@@ -189,20 +227,25 @@ class AuthController extends GetxController {
   }
 
   Future<void> addUserInfo() async {
-    if (auth.currentUser != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(auth.currentUser!.uid)
-          .collection('userData') // Sub-collection for user-specific data
-          .doc('profile') // Use a fixed document ID like 'profile'
-          .set({
-        'id': auth.currentUser!.uid,
-        'username': usernameController.text,
-        'phoneNumber': "+237${phoneNumberController.text}",
-        'email': emailController.text,
-        'profileImageUrl': imageControllerUpdate.imageUrl.value,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+    try {
+      if (auth.currentUser != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.currentUser!.uid)
+            .collection('userData') // Sub-collection for user-specific data
+            .doc('profile') // Use a fixed document ID like 'profile'
+            .set({
+          'id': auth.currentUser!.uid,
+          'username': usernameController.text,
+          'phoneNumber': "+237${phoneNumberController.text}",
+          'email': emailController.text,
+          'profileImageUrl': imageControllerUpdate.imageUrl.value,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      CustomSnackBar("Error", "Could not add user info$e", 'error');
+      print("Error $e");
     }
   }
 
@@ -221,7 +264,7 @@ class AuthController extends GetxController {
     await auth.signOut();
     await initialScreen(auth.currentUser);
     Get.off(() => LoginPage());
-    CustomSnackBar("Success", "Log you out ...", 'sucess');
+    CustomSnackBar("Success", "Log you out ...", 'success');
   }
   // Log out Process =------- End >
 }
